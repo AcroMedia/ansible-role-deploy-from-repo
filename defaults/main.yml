@@ -1,0 +1,4 @@
+---
+repo_src: 'git@change-me.invalid:no-such-user/no-such-project.git'
+repo_subdir: ''
+make_cmd: 'make -s install'

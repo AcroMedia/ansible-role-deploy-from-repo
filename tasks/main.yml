@@ -1,0 +1,61 @@
+---
+- name: Create a local temporary dir
+  become: false
+  local_action:
+    module: tempfile
+    state: directory
+  register: local_tempdir_result
+
+- name: Clone '{{ repo_src }}' locally
+  become: false
+  local_action:
+    module: git
+    repo: "{{ repo_src }}"
+    dest: "{{ local_tempdir_result.path }}/"
+  when: local_tempdir_result is defined
+    and local_tempdir_result.path is defined
+  register: clone_result
+
+- name: Create a temporary dir on the host
+  tempfile:
+    state: directory
+  when: clone_result is defined
+    and clone_result.changed
+  register: remote_tempdir_result
+
+- debug:
+    var: local_tempdir_result
+- debug:
+    var: repo_subdir
+
+- name: Sync locally cloned files to the remote temp dir
+  synchronize:
+    src: "{{ local_tempdir_result.path }}/{{ repo_subdir }}/"
+    dest: "{{ remote_tempdir_result.path }}/"
+    recursive: true
+    rsync_opts:
+      - "--exclude=.git"
+  when: remote_tempdir_result is defined
+    and remote_tempdir_result.path is defined
+  register: upload_result
+
+- name: Run '{{ make_cmd }}' in the remote temp dir
+  shell: "{{ make_cmd }}"
+  args:
+    chdir: "{{ remote_tempdir_result.path }}/"
+  when: upload_result is defined
+    and upload_result.changed
+
+- name: Remove the remote temporary dir
+  file:
+    state: absent
+    path: "{{ remote_tempdir_result.path }}"
+  when: remote_tempdir_result is defined
+    and remote_tempdir_result.path is defined
+
+- name: Remove the local temp dir
+  file:
+    state: absent
+    path: "{{ local_tempdir_result.path }}"
+  when: local_tempdir_result is defined
+    and local_tempdir_result.path is defined
