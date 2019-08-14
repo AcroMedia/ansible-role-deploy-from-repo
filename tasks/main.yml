@@ -5,6 +5,7 @@
     module: tempfile
     state: directory
   register: local_tempdir_result
+  run_once: true
 
 - name: Clone '{{ repo_src }}' locally
   become: false
@@ -15,6 +16,7 @@
   when: local_tempdir_result is defined
     and local_tempdir_result.path is defined
   register: clone_result
+  run_once: true
 
 - name: Create a temporary dir on the host
   tempfile:
@@ -59,3 +61,4 @@
     path: "{{ local_tempdir_result.path }}"
   when: local_tempdir_result is defined
     and local_tempdir_result.path is defined
+  run_once: true
