@@ -1,0 +1,5 @@
+skip_list:
+  - '504' # Ignore Do not use 'local_action', use 'delegate_to: localhost'
+  - '401' # Ignore [401] Git checkouts must contain explicit version
+  - '503' # Ignore [503] Tasks that run when changed should likely be handlers
+  - '305'

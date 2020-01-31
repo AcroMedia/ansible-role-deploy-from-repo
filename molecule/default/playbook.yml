@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: ansible-role-deploy-from-repo
+  vars:
+    override: "{{ lookup('env', 'REPO_SRC') }}"
+    repo_src: "{{ (override | length > 0) | ternary(override, 'git@github.com:AcroMedia/ansible-role-deploy-from-repo.git') }}"
