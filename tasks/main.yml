@@ -1,4 +1,5 @@
 ---
+# @todo: rsync error: MOLECULE_DISTRO=ubuntu1604 REPO_SRC=git@github.com:AcroMedia/ansible-role-deploy-from-repo.git molecule test --destroy=never
 - name: Create a local temporary dir
   become: false
   local_action:
