@@ -1,5 +1,7 @@
 # Ansible role: Deploy from Repo
 
+![.github/workflows/molecule.yml](https://github.com/AcroMedia/ansible-role-deploy-from-repo/workflows/.github/workflows/molecule.yml/badge.svg)
+
 Clone the specified git repository locally, push its contents up to a temp directory on the server, and then run the specified command in the uploaded folder.
 
 Intended for use with private repos that have a `make` install process.
