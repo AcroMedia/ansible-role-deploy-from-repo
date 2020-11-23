@@ -1,0 +1,24 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    repo_src: 'git@git.acromedia.com:teams/id/devops/ansible-test.git'
+
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      changed_when: false
+
+    - name : Install rsync
+      package:
+        name: rsync
+        state: present
+
+    - name: Install make
+      package:
+        name: make
+        state: present
+  roles:
+    - role: ansible-role-deploy-from-repo
